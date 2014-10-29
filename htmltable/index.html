@@ -7,7 +7,7 @@
 
 <meta name="author" content="Christian Rubba">
 
-<meta name="date" content="2014-10-28">
+<meta name="date" content="2014-10-29">
 
 <title>Hassle-free HTML tables with htmltable</title>
 
@@ -76,7 +76,7 @@ code > span.er { color: #ff0000; font-weight: bold; }
 <div id="header">
 <h1 class="title">Hassle-free HTML tables with htmltable</h1>
 <h4 class="author"><em>Christian Rubba</em></h4>
-<h4 class="date"><em>2014-10-28</em></h4>
+<h4 class="date"><em>2014-10-29</em></h4>
 </div>
 
 
@@ -121,7 +121,7 @@ method is used.</p>
 <p>In many HTML tables, spans are used to allow cell values to extend over multiple cells. <code>htmltable()</code>
  recognizes spans and expands these tables automatically. To illustrate 
 this feature, take a look at the HTML table in the Language section on 
-this <a href="file:///var/folders/wj/wlj15ym966qf60kv4zj05cdw0000gn/T/RtmpoR8QWW/preview-416313c1a651.dir/en.wikipedia.org/wiki/Demography_of_the_United_Kingdom.html#Languages">Wikipedia page about Demography in the UK</a>.
+this <a href="file:///var/folders/wj/wlj15ym966qf60kv4zj05cdw0000gn/T/RtmpK93QoX/preview-43a36181346c.dir/en.wikipedia.org/wiki/Demography_of_the_United_Kingdom.html#Languages">Wikipedia page about Demography in the UK</a>.
  Header information span over three consecutive rows. To get this table 
 into R, we have to pass an identifiying information to the <em>which</em>
  argument. Here, I use an XPath statement that I came up with during 
@@ -129,7 +129,7 @@ exploration of the HTML page with Web Developer Tools. One that works
 here is “//table[12]” (passing 12 would have resulted in the same 
 output).</p>
 <pre class="sourceCode r"><code class="sourceCode r">url &lt;-<span class="st"> "http://en.wikipedia.org/wiki/Demography_of_the_United_Kingdom"</span>
-ukLang &lt;-<span class="st"> </span><span class="kw">htmltable</span>(<span class="dt">doc =</span> url, <span class="dt">which =</span> <span class="st">"//table[12]"</span>, <span class="dt">header =</span> <span class="st">"tr[th]"</span>, <span class="dt">body =</span> <span class="st">"tr[td]"</span>)[[<span class="dv">1</span>]]
+ukLang &lt;-<span class="st"> </span><span class="kw">htmltable</span>(<span class="dt">doc =</span> url, <span class="dt">which =</span> <span class="st">"//table[12]"</span>, <span class="dt">header =</span> <span class="st">"tr[th]"</span>, <span class="dt">body =</span> <span class="st">"tr[td]"</span>)
 <span class="kw">head</span>(ukLang)</code></pre>
 <pre><code>##                                         Ability Wales &gt;2&gt; Welsh &gt;3&gt; Number
 ## 1 Understands but does not speak, read or write                    157,792
@@ -186,14 +186,8 @@ the hierarchical order of the variables and yet only spans a single line
 pass it to the <em>headerSep</em> argument. This format was mainly 
 chosen to make further processing of the table really easy. For example,
  using functionality from the <em>tidyr</em> package, the next couple of data cleaning step may be the following:</p>
-<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(tidyr)</code></pre>
-<pre><code>## 
-## Attaching package: 'tidyr'
-## 
-## The following object is masked from 'package:magrittr':
-## 
-##     extract</code></pre>
-<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(magrittr)
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(tidyr)
+<span class="kw">library</span>(magrittr)
 
 ukLang &lt;-<span class="st"> </span>ukLang %&gt;%<span class="st"> </span><span class="kw">gather</span>(key, value, -Ability)</code></pre>
 <p>This gathers the variables into a more useful long format. From this 
@@ -230,7 +224,7 @@ that identifies the respective rows. To illustrate, take a look at this <a href=
 need to control for explicitly in the assembling stage. Here, I pass the
  XPath “tr[./td<span class="citation">[not(@colspan = '10')]</span>]” to the <em>body</em> argument to explicitly discard all rows from the body that have a &lt;td&gt; cell with a colspan attribute of 10:</p>
 <pre class="sourceCode r"><code class="sourceCode r">url &lt;-<span class="st"> "http://en.wikipedia.org/wiki/New_Zealand_general_election,_2002"</span>
-nz1 &lt;-<span class="st"> </span><span class="kw">htmltable</span>(<span class="dt">doc =</span> url, <span class="dt">which =</span> <span class="dv">4</span>, <span class="dt">header =</span> <span class="st">"tr[th]"</span>, <span class="dt">body =</span> <span class="st">"tr[./td[not(@colspan = '10')]]"</span>)[[<span class="dv">1</span>]]
+nz1 &lt;-<span class="st"> </span><span class="kw">htmltable</span>(<span class="dt">doc =</span> url, <span class="dt">which =</span> <span class="dv">4</span>, <span class="dt">header =</span> <span class="st">"tr[th]"</span>, <span class="dt">body =</span> <span class="st">"tr[./td[not(@colspan = '10')]]"</span>)
 <span class="kw">head</span>(nz1)</code></pre>
 <pre><code>##             Electorate Incumbent      Incumbent         Winner
 ## 1               Aoraki               Jim Sutton     Jim Sutton
@@ -305,7 +299,7 @@ is found to be empty it extracts the style attributes and translates the
   <span class="kw">return</span>(x)
 }</code></pre>
 <p>We can now simply pass this function to the <em>elFun</em> argument:</p>
-<pre class="sourceCode r"><code class="sourceCode r">nz2 &lt;-<span class="st"> </span><span class="kw">htmltable</span>(<span class="dt">doc =</span> url, <span class="dt">which =</span> <span class="dv">4</span>, <span class="dt">header =</span> <span class="st">"tr[th]"</span>, <span class="dt">body =</span> <span class="st">"tr[./td[not(@colspan = '10')]]"</span>, <span class="dt">elFun =</span> col_party)[[<span class="dv">1</span>]]
+<pre class="sourceCode r"><code class="sourceCode r">nz2 &lt;-<span class="st"> </span><span class="kw">htmltable</span>(<span class="dt">doc =</span> url, <span class="dt">which =</span> <span class="dv">4</span>, <span class="dt">header =</span> <span class="st">"tr[th]"</span>, <span class="dt">body =</span> <span class="st">"tr[./td[not(@colspan = '10')]]"</span>, <span class="dt">elFun =</span> col_party)
 <span class="kw">head</span>(nz2)</code></pre>
 <pre><code>##             Electorate Incumbent      Incumbent         Winner
 ## 1               Aoraki    Labour     Jim Sutton     Jim Sutton
